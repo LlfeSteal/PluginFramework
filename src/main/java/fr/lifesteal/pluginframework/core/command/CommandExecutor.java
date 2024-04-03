@@ -1,4 +1,4 @@
-package fr.Lifesteal.PluginFramework.core.Command;
+package fr.lifesteal.pluginframework.core.command;
 
 import org.bukkit.command.CommandSender;
 

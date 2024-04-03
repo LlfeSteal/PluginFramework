@@ -1,11 +1,10 @@
-package fr.Lifesteal.PluginFramework.core.Command;
+package fr.lifesteal.pluginframework.core.command;
 
-import fr.Lifesteal.PluginFramework.api.command.ICommandBase;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class CommandBase implements ICommandBase {
+public abstract class CommandBase {
     private final String name;
     private final String permission;
     private final Class<? extends CommandExecutor> executorType;

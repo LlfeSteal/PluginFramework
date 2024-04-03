@@ -1,12 +1,10 @@
-package fr.Lifesteal.PluginFramework.core.plugin;
+package fr.lifesteal.pluginframework.core.plugin;
 
-import fr.Lifesteal.PluginFramework.core.Command.PluginCommand;
+import fr.lifesteal.pluginframework.core.command.PluginCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.lang.reflect.Field;
 import java.util.List;
