@@ -42,7 +42,7 @@ public abstract class PluginBase extends JavaPlugin {
     }
 
     /**
-     * Méthode used to register plugin commands.
+     * Method used to register plugin commands.
      */
     private void registerBukkitCommand() {
         try {
