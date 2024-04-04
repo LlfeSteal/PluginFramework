@@ -6,8 +6,8 @@ import fr.lifesteal.pluginframework.core.config.ConfigServiceBase;
 
 public class FrameworkLangService extends ConfigServiceBase {
 
-    @ConfigParam(paramKey="truc.truc", defaultValue = "default")
-    private String test;
+    @ConfigParam(paramKey="truc.truc")
+    private String test = "DefaultValue";
 
     public FrameworkLangService(ConfigRepository configRepository) {
         super(configRepository);
