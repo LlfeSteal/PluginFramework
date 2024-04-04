@@ -10,13 +10,14 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PluginBase extends JavaPlugin {
     private final String PluginFolder = getDataFolder().toString();
     private final ConfigRepositoryFactory  ConfigRepositoryFactory = new ConfigRepositoryFactory(PluginFolder);
-    private List<PluginCommand> commands;
-    private List<ConfigService> configurationsServices;
+    private List<PluginCommand> commands = new ArrayList<>();
+    private List<ConfigService> configurationsServices = new ArrayList<>();
 
     @Override
     public void onEnable() {
