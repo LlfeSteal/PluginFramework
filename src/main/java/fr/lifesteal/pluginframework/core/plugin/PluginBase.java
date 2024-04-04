@@ -7,6 +7,7 @@ import fr.lifesteal.pluginframework.core.config.framework.FrameworkLangService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -18,12 +19,14 @@ public abstract class PluginBase extends JavaPlugin {
     private final ConfigRepositoryFactory  ConfigRepositoryFactory = new ConfigRepositoryFactory(PluginFolder);
     private List<PluginCommand> commands = new ArrayList<>();
     private List<ConfigService> configurationsServices = new ArrayList<>();
+    private List<Listener> listeners = new ArrayList<>();
 
     @Override
     public void onEnable() {
         initPluginFields();
         initConfigurationServices();
         registerBukkitCommand();
+        registerBukkitListeners();
     }
 
     public abstract void Init();
@@ -34,15 +37,26 @@ public abstract class PluginBase extends JavaPlugin {
 
     protected abstract List<PluginCommand> registerCommands();
     protected abstract List<ConfigService> registerConfigurationsServices();
+    protected abstract List<Listener> registerListeners();
 
     private void initPluginFields() {
         commands = this.registerCommands();
         configurationsServices = this.registerConfigurationsServices();
         configurationsServices.add(new FrameworkLangService(ConfigRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml")));
+        listeners = registerListeners();
     }
 
     /**
-     * Method used to register plugin commands.
+     * Method used to init plugin's configuration services.
+     */
+    private void initConfigurationServices() {
+        for (var configurationService : configurationsServices) {
+            configurationService.initConfig();
+        }
+    }
+
+    /**
+     * Method used to register plugin's commands.
      */
     private void registerBukkitCommand() {
         try {
@@ -58,9 +72,12 @@ public abstract class PluginBase extends JavaPlugin {
         }
     }
 
-    private void initConfigurationServices() {
-        for (var configurationService : configurationsServices) {
-            configurationService.initConfig();
+    /**
+     * Method used to register plugin's listeners.
+     */
+    private void registerBukkitListeners() {
+        for (var listener : this.listeners) {
+            Bukkit.getServer().getPluginManager().registerEvents(listener, this);
         }
     }
 }
