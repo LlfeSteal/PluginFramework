@@ -22,7 +22,7 @@ public abstract class PluginBase extends JavaPlugin {
     @Override
     public void onEnable() {
         initPluginFields();
-        initConfiguration();
+        initConfigurationServices();
         registerBukkitCommand();
     }
 
@@ -58,7 +58,7 @@ public abstract class PluginBase extends JavaPlugin {
         }
     }
 
-    private void initConfiguration() {
+    private void initConfigurationServices() {
         for (var configurationService : configurationsServices) {
             configurationService.initConfig();
         }
