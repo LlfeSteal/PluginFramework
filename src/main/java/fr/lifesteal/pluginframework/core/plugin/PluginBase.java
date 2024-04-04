@@ -1,5 +1,6 @@
 package fr.lifesteal.pluginframework.core.plugin;
 
+import fr.lifesteal.pluginframework.api.config.ConfigService;
 import fr.lifesteal.pluginframework.core.command.PluginCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -9,16 +10,24 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class PluginBase extends JavaPlugin {
-    private final List<PluginCommand> commands;
-
-    public PluginBase(List<PluginCommand> commands) {
-        this.commands = commands;
-    }
+public abstract class PluginBase extends JavaPlugin {
+    private List<PluginCommand> commands;
+    private List<ConfigService> configurationsServices;
 
     @Override
     public void onEnable() {
+        initConfiguration();
         registerCommands();
+    }
+
+    public abstract void Init();
+
+    protected void setCommands(List<PluginCommand> commands) {
+        this.commands = commands;
+    }
+
+    protected void setConfigurationsServices(List<ConfigService> configurationsServices) {
+        this.configurationsServices = configurationsServices;
     }
 
     /**
@@ -35,6 +44,12 @@ public class PluginBase extends JavaPlugin {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initConfiguration() {
+        for (var configurationService : configurationsServices) {
+            configurationService.initConfig();
         }
     }
 }

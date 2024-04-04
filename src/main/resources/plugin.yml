@@ -1,4 +1,4 @@
-name: 'PluginFrameowkr'
+name: 'PluginFramework'
 version: '1.0.0'
-main: fr.dorianosaure.RespectGuard.RespectGuard
-author: Dorianosaure
+main: fr.lifesteal.pluginframework.demo.TestPlugin
+author: Lifesteal
