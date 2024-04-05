@@ -2,6 +2,7 @@ package fr.lifesteal.pluginframework.core.plugin;
 
 import fr.lifesteal.pluginframework.api.config.ConfigService;
 import fr.lifesteal.pluginframework.core.command.PluginCommand;
+import fr.lifesteal.pluginframework.core.command.factory.CommandFactory;
 import fr.lifesteal.pluginframework.core.config.factory.ConfigRepositoryFactory;
 import fr.lifesteal.pluginframework.core.config.framework.FrameworkLangService;
 import org.bukkit.Bukkit;
@@ -17,6 +18,8 @@ import java.util.List;
 public abstract class PluginBase extends JavaPlugin {
     private final String PluginFolder = getDataFolder().toString();
     private final ConfigRepositoryFactory  ConfigRepositoryFactory = new ConfigRepositoryFactory(PluginFolder);
+    private final fr.lifesteal.pluginframework.api.config.FrameworkLangService langService = new FrameworkLangService(ConfigRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml"));
+    private final CommandFactory commandFactory = new CommandFactory(langService);
     private List<PluginCommand> commands = new ArrayList<>();
     private List<ConfigService> configurationsServices = new ArrayList<>();
     private List<Listener> listeners = new ArrayList<>();
@@ -35,6 +38,10 @@ public abstract class PluginBase extends JavaPlugin {
         return ConfigRepositoryFactory;
     }
 
+    public CommandFactory getCommandFactory() {
+        return commandFactory;
+    }
+
     protected abstract List<PluginCommand> registerCommands();
     protected abstract List<ConfigService> registerConfigurationsServices();
     protected abstract List<Listener> registerListeners();
@@ -42,7 +49,7 @@ public abstract class PluginBase extends JavaPlugin {
     private void initPluginFields() {
         commands = this.registerCommands();
         configurationsServices = this.registerConfigurationsServices();
-        configurationsServices.add(new FrameworkLangService(ConfigRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml")));
+        configurationsServices.add(this.langService);
         listeners = registerListeners();
     }
 

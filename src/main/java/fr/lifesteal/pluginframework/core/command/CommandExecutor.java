@@ -3,7 +3,6 @@ package fr.lifesteal.pluginframework.core.command;
 import org.bukkit.command.CommandSender;
 
 public abstract class CommandExecutor {
-
     private final CommandSender issuer;
     private final String[] args;
 
