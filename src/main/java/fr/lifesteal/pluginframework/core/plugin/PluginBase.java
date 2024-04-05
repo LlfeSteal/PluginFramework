@@ -16,26 +16,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PluginBase extends JavaPlugin {
-    private final String PluginFolder = getDataFolder().toString();
-    private final ConfigRepositoryFactory  ConfigRepositoryFactory = new ConfigRepositoryFactory(PluginFolder);
-    private final fr.lifesteal.pluginframework.api.config.FrameworkLangService langService = new FrameworkLangService(ConfigRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml"));
-    private final CommandFactory commandFactory = new CommandFactory(langService);
+    private final String PluginFolder = getDataFolder().getPath();
+    private ConfigRepositoryFactory  configRepositoryFactory;
+    private fr.lifesteal.pluginframework.api.config.FrameworkLangService langService;
+    private CommandFactory commandFactory;
     private List<PluginCommand> commands = new ArrayList<>();
     private List<ConfigService> configurationsServices = new ArrayList<>();
     private List<Listener> listeners = new ArrayList<>();
 
     @Override
     public void onEnable() {
+        initPluginFactories();
+        init();
         initPluginFields();
         initConfigurationServices();
         registerBukkitCommand();
         registerBukkitListeners();
     }
 
-    public abstract void Init();
+    public abstract void init();
 
     public ConfigRepositoryFactory getConfigRepositoryFactory() {
-        return ConfigRepositoryFactory;
+        return configRepositoryFactory;
     }
 
     public CommandFactory getCommandFactory() {
@@ -45,6 +47,14 @@ public abstract class PluginBase extends JavaPlugin {
     protected abstract List<PluginCommand> registerCommands();
     protected abstract List<ConfigService> registerConfigurationsServices();
     protected abstract List<Listener> registerListeners();
+
+    private void initPluginFactories() {
+        getDataFolder().mkdir();
+        configRepositoryFactory = new ConfigRepositoryFactory(getLogger(), PluginFolder);
+
+        langService = new FrameworkLangService(configRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml"));
+        commandFactory = new CommandFactory(langService);
+    }
 
     private void initPluginFields() {
         commands = this.registerCommands();

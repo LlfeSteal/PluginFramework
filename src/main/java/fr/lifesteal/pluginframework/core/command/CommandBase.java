@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandBase {
     private final FrameworkLangService langService;
@@ -41,9 +42,15 @@ public class CommandBase {
                 add(args);
                 addAll(extraArguments);
             }};
-            Class<?>[] parametersTypes = parameters.stream().map(Object::getClass).toArray(Class<?>[]::new);
-            var constructor = executorType.getConstructor(parametersTypes);
-            var commandExecutor = constructor.newInstance(parameters);
+
+            var parametersTypes = new ArrayList<Class<?>>(){{
+                add(CommandSender.class);
+                add(String[].class);
+                addAll(extraArguments.stream().map(Object::getClass).collect(Collectors.toList()));
+            }};
+
+            var constructor = executorType.getConstructor(parametersTypes.toArray(Class<?>[]::new));
+            var commandExecutor = constructor.newInstance(parameters.toArray());
 
             if (!commandExecutor.prepare()) {
                 return false;

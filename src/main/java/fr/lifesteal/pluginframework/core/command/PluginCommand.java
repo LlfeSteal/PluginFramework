@@ -10,7 +10,7 @@ public class PluginCommand extends Command {
     private final CommandBase defaultCommand;
     private final List<CommandBase> subCommands;
 
-    protected PluginCommand(String name, String description, String usageMessage, List<String> aliases, CommandBase defaultCommand, List<CommandBase> subCommands) {
+    public PluginCommand(String name, String description, String usageMessage, List<String> aliases, CommandBase defaultCommand, List<CommandBase> subCommands) {
         super(name, description, usageMessage, aliases);
         this.defaultCommand = defaultCommand;
         this.subCommands = subCommands;

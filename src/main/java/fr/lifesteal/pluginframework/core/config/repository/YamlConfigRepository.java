@@ -24,7 +24,7 @@ public class YamlConfigRepository implements ConfigRepository {
 
             if (value == null) {
                 value = defaultValue;
-                this.configFile.addDefault(key, defaultValue);
+                this.configFile.addDefault(key, value);
                 this.configFile.save(this.file);
             }
 
