@@ -6,6 +6,9 @@ import fr.lifesteal.pluginframework.core.config.ConfigParam;
 import fr.lifesteal.pluginframework.core.config.ConfigServiceBase;
 
 public class FrameworkLangService extends ConfigServiceBase implements fr.lifesteal.pluginframework.api.config.FrameworkLangService {
+    @Colorized
+    @ConfigParam(paramKey = "messages.error.command.default")
+    private String defaultErrorMessage = "&cUne erreur est survenue.";
 
     @Colorized
     @ConfigParam(paramKey="messages.error.command.disabled")
@@ -17,6 +20,10 @@ public class FrameworkLangService extends ConfigServiceBase implements fr.lifest
 
     public FrameworkLangService(ConfigRepository configRepository) {
         super(configRepository);
+    }
+
+    public String getDefaultErrorMessage() {
+        return defaultErrorMessage;
     }
 
     @Override

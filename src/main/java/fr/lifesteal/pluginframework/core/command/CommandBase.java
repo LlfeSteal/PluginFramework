@@ -3,6 +3,7 @@ package fr.lifesteal.pluginframework.core.command;
 import fr.lifesteal.pluginframework.api.config.FrameworkLangService;
 import org.bukkit.command.CommandSender;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class CommandBase {
     private final String permission;
     private final Class<? extends CommandExecutor> executorType;
     private final List<Object> extraArguments;
+    private final Constructor<? extends CommandExecutor> executorConstructor;
     private boolean isDisabled;
 
     public CommandBase(FrameworkLangService langService, String name, String permission, boolean isDisabled, Class<? extends CommandExecutor> executorType, Object... extraArguments) {
@@ -23,6 +25,24 @@ public class CommandBase {
         this.isDisabled = isDisabled;
         this.executorType = executorType;
         this.extraArguments = extraArguments.length > 0 ? List.of(extraArguments) : new ArrayList<>();
+        this.executorConstructor = getExecutorConstructor();
+    }
+
+    private Constructor<? extends CommandExecutor> getExecutorConstructor() {
+        var parametersTypes = new ArrayList<Class<?>>(){{
+            add(CommandSender.class);
+            add(String[].class);
+            addAll(extraArguments.stream().map(Object::getClass).collect(Collectors.toList()));
+        }};
+
+        try {
+            return executorType.getConstructor(parametersTypes.toArray(Class<?>[]::new));
+        } catch (NoSuchMethodException e) {
+            setDisabled(true);
+            // Todo : Ajouter log d'error.
+        }
+
+        return null;
     }
 
     public boolean execute(CommandSender issuer, String[] args) {
@@ -36,28 +56,18 @@ public class CommandBase {
             return false;
         }
 
+        var parameters = new ArrayList<>(){{
+            add(issuer);
+            add(args);
+            addAll(extraArguments);
+        }};
+
         try {
-            var parameters = new ArrayList<>(){{
-                add(issuer);
-                add(args);
-                addAll(extraArguments);
-            }};
+            var commandExecutor = this.executorConstructor.newInstance(parameters.toArray());
 
-            var parametersTypes = new ArrayList<Class<?>>(){{
-                add(CommandSender.class);
-                add(String[].class);
-                addAll(extraArguments.stream().map(Object::getClass).collect(Collectors.toList()));
-            }};
-
-            var constructor = executorType.getConstructor(parametersTypes.toArray(Class<?>[]::new));
-            var commandExecutor = constructor.newInstance(parameters.toArray());
-
-            if (!commandExecutor.prepare()) {
-                return false;
-            }
-
-            return commandExecutor.execute();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            return commandExecutor.prepare() && commandExecutor.execute();
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            issuer.sendMessage(this.langService.getDefaultErrorMessage());
             throw new RuntimeException(e);
         }
     }
