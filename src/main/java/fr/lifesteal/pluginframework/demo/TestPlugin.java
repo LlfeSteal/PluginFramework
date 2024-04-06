@@ -23,8 +23,26 @@ public class TestPlugin extends PluginBase {
     @Override
     protected List<PluginCommand> registerCommands() {
         return new ArrayList<>() {{
-            add(getCommandFactory().getNewPluginCommand("ping", "demo.ping", PingCommand.class, demoLangService));
-            add(getCommandFactory().getNewPluginCommand("wiki", "demo.wiki", WikiCommand.class, demoLangService));
+            add(getPluginCommandFactory()
+                    .setName("ping")
+                    .setDescription("Méthode de ping.")
+                    .addAlias("png")
+                    .setDefaultCommand(getCommandBaseBuilder()
+                            .setPermission("demo.ping")
+                            .setExecutorType(PingCommand.class)
+                            .addExtraArgument(demoLangService)
+                            .build())
+                    .build());
+            add(getPluginCommandFactory()
+                    .setName("wiki")
+                    .setDescription("Affichage du wiki.")
+                    .addAlias("help")
+                    .setDefaultCommand(getCommandBaseBuilder()
+                            .setPermission("demo.wiki")
+                            .setExecutorType(WikiCommand.class)
+                            .addExtraArgument(demoLangService)
+                            .build())
+                    .build());
         }};
     }
 

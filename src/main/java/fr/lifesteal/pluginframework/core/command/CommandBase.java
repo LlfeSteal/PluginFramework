@@ -73,7 +73,7 @@ public class CommandBase {
     }
 
     private boolean checkPermission(CommandSender issuer) {
-        return issuer.hasPermission(this.permission);
+        return this.permission == null || issuer.hasPermission(this.permission);
     }
 
     public String getName() {
