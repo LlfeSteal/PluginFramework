@@ -24,6 +24,7 @@ public class FrameworkLangService extends ConfigServiceBase implements fr.lifest
         super(logger, configRepository);
     }
 
+    @Override
     public String getDefaultErrorMessage() {
         return defaultErrorMessage;
     }
