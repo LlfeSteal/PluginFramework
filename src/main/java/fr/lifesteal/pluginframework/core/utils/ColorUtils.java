@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 // Todo: revoir cette classe.
 public final class ColorUtils {
-    private static final char ColorChar = '#';
+    private static final char ColorChar = '&';
     private static final String HexaColorChar = "#";
 
     public static String colorize(String message) {
