@@ -7,10 +7,13 @@ import java.util.regex.Pattern;
 
 // Todo: revoir cette classe.
 public final class ColorUtils {
+    private static final char ColorChar = '#';
+    private static final String HexaColorChar = "#";
+
     public static String colorize(String message) {
-        message = matchHexaReplace("&#", message);
-        message = matchHexaReplace("#", message);
-        return ChatColor.translateAlternateColorCodes('&', message);
+        message = matchHexaReplace(ColorChar + HexaColorChar, message);
+        message = matchHexaReplace(HexaColorChar, message);
+        return ChatColor.translateAlternateColorCodes(ColorChar, message);
     }
 
     private static String matchHexaReplace(String match, String message) {
@@ -18,7 +21,7 @@ public final class ColorUtils {
         Matcher matcher = hexPattern.matcher(message);
         StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
         while (matcher.find()) {
-            matcher.appendReplacement(buffer, ChatColor.of("#" + matcher.group(1)).toString());
+            matcher.appendReplacement(buffer, ChatColor.of(HexaColorChar + matcher.group(1)).toString());
         }
         return matcher.appendTail(buffer).toString();
     }
