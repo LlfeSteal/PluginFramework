@@ -7,6 +7,7 @@ import fr.lifesteal.pluginframework.core.config.ConfigServiceBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class DemoLangService extends ConfigServiceBase {
 
@@ -24,8 +25,8 @@ public class DemoLangService extends ConfigServiceBase {
         add("&6Wiki 4 orange");
     }};
 
-    public DemoLangService(ConfigRepository configRepository) {
-        super(configRepository);
+    public DemoLangService(Logger logger, ConfigRepository configRepository) {
+        super(logger, configRepository);
     }
 
     public String getPongMessage() {

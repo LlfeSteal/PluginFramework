@@ -52,7 +52,7 @@ public abstract class PluginBase extends JavaPlugin {
         getDataFolder().mkdir();
         configRepositoryFactory = new ConfigRepositoryFactory(getLogger(), PluginFolder);
 
-        langService = new FrameworkLangService(configRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml"));
+        langService = new FrameworkLangService(getLogger(), configRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml"));
         commandFactory = new CommandFactory(langService);
     }
 

@@ -17,7 +17,7 @@ public class TestPlugin extends PluginBase {
     @Override
     public void init() {
         var demoConfigRepository = getConfigRepositoryFactory().getNewYamlConfigFactory("demo", "lang.yml");
-        demoLangService = new DemoLangService(demoConfigRepository);
+        demoLangService = new DemoLangService(getLogger(), demoConfigRepository);
     }
 
     @Override
