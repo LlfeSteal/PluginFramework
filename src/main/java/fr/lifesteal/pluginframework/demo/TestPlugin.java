@@ -18,7 +18,7 @@ import java.util.List;
 public class TestPlugin extends PluginBase {
 
     static {
-        ConfigurationSerialization.registerClass(DemoData.class);
+        ConfigurationSerialization.registerClass(DemoData.class, "DemoData");
     }
 
     private DemoLangService demoLangService;

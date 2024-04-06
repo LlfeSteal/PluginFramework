@@ -1,11 +1,11 @@
 package fr.lifesteal.pluginframework.core.config.repository;
 
-import com.sun.jdi.InvalidTypeException;
 import fr.lifesteal.pluginframework.api.config.ConfigRepository;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class YamlConfigRepository implements ConfigRepository {
     private final File file;
@@ -20,7 +20,9 @@ public class YamlConfigRepository implements ConfigRepository {
     @Override
     public <T> T getConfigValue(String key, T defaultValue) {
         try {
-            var value = configFile.getObject(key, (Class<T>) defaultValue.getClass());
+            var value = (defaultValue instanceof List)
+                    ? (T) configFile.getList(key)
+                    : configFile.getObject(key, (Class<T>) defaultValue.getClass());
 
             if (value == null) {
                 value = defaultValue;
