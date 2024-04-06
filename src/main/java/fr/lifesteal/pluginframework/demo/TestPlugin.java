@@ -5,6 +5,7 @@ import fr.lifesteal.pluginframework.core.command.PluginCommand;
 import fr.lifesteal.pluginframework.core.plugin.PluginBase;
 import fr.lifesteal.pluginframework.demo.business.DemoLangService;
 import fr.lifesteal.pluginframework.demo.command.PingCommand;
+import fr.lifesteal.pluginframework.demo.command.WikiCommand;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ public class TestPlugin extends PluginBase {
     @Override
     protected List<PluginCommand> registerCommands() {
         return new ArrayList<>() {{
-            add(getCommandFactory().getNewPluginCommand("ping", "", "demo.ping", PingCommand.class, demoLangService));
+            add(getCommandFactory().getNewPluginCommand("ping", "demo.ping", PingCommand.class, demoLangService));
+            add(getCommandFactory().getNewPluginCommand("wiki", "demo.wiki", WikiCommand.class, demoLangService));
         }};
     }
 

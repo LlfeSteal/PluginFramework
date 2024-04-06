@@ -4,7 +4,7 @@ import fr.lifesteal.pluginframework.api.config.ConfigService;
 import fr.lifesteal.pluginframework.core.command.PluginCommand;
 import fr.lifesteal.pluginframework.core.command.factory.CommandFactory;
 import fr.lifesteal.pluginframework.core.config.factory.ConfigRepositoryFactory;
-import fr.lifesteal.pluginframework.core.config.framework.FrameworkLangService;
+import fr.lifesteal.pluginframework.core.business.FrameworkLangService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;

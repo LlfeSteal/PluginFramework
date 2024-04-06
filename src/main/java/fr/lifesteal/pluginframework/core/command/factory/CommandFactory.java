@@ -18,8 +18,8 @@ public class CommandFactory {
         return new CommandBase(langService, name, permission, isDisabled, executorType, executorExtraParams);
     }
 
-    public PluginCommand getNewPluginCommand(String name, String usage, String permission, Class<? extends CommandExecutor> executorType, Object... executorExtraParams) {
+    public PluginCommand getNewPluginCommand(String name, String permission, Class<? extends CommandExecutor> executorType, Object... executorExtraParams) {
         var defaultCommand = getNewCommand(name, permission, false, executorType, executorExtraParams);
-        return new PluginCommand(name, "", usage, new ArrayList<>(), defaultCommand, new ArrayList<>());
+        return new PluginCommand(name, "", null, new ArrayList<>(), defaultCommand, new ArrayList<>());
     }
 }
