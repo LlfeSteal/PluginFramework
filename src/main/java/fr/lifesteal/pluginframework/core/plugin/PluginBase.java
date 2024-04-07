@@ -58,7 +58,7 @@ public abstract class PluginBase extends JavaPlugin {
     }
 
     private void initPluginFields() {
-        this.langService = new FrameworkLangService(getLogger(), configRepositoryFactory.getNewYamlConfigFactory("framework", "framework-lang.yml"));
+        this.langService = new FrameworkLangService(getLogger(), configRepositoryFactory.getNewYamlRepository("framework", "framework-lang.yml"));
 
         commands = this.registerCommands();
         configurationsServices = this.registerConfigurationsServices();

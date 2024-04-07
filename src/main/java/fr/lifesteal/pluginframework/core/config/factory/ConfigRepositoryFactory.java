@@ -15,7 +15,7 @@ public class ConfigRepositoryFactory {
         this.basePath = basePath;
     }
 
-    public YamlConfigRepository getNewYamlConfigFactory(String subFolder, String fileName) {
+    public YamlConfigRepository getNewYamlRepository(String subFolder, String fileName) {
         try {
             return new YamlConfigRepository(createNewConfigFile(getFilePath(subFolder), fileName));
         } catch (IOException e) {

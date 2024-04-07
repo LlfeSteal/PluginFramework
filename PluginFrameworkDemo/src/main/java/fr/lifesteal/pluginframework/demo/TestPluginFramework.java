@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestPlugin extends PluginBase {
+public class TestPluginFramework extends PluginBase {
 
     static {
         ConfigurationSerialization.registerClass(DemoData.class, "DemoData");
