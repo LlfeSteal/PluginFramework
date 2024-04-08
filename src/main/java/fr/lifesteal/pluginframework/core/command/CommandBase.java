@@ -5,7 +5,8 @@ import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommandBase {
@@ -16,7 +17,7 @@ public class CommandBase {
     private final Class<? extends CommandExecutor> executorType;
     private final List<Object> extraArguments;
     private final Constructor<? extends CommandExecutor> executorConstructor;
-    private final Map<Integer, String> parameterPosition;
+    private final CommandParameterManager parameterManager;
     private boolean isDisabled;
 
     public CommandBase(
@@ -35,7 +36,7 @@ public class CommandBase {
         this.executorType = executorType;
         this.extraArguments = extraArguments.length > 0 ? List.of(extraArguments) : new ArrayList<>();
         this.executorConstructor = getExecutorConstructor();
-        this.parameterPosition = getCommandParameterPositions();
+        this.parameterManager = new CommandParameterManager(this.name, this.usage);
     }
 
     public boolean execute(CommandSender issuer, String[] args) {
@@ -49,19 +50,23 @@ public class CommandBase {
             return false;
         }
 
+        if (!this.parameterManager.areParametersValid(args)) {
+            issuer.sendMessage(this.langService.getCommandUsageMessage(this.usage));
+            return false;
+        }
+
         var commandExecutor = getNewExecutorInstance(issuer, args);
 
         return commandExecutor.prepare() && commandExecutor.execute();
     }
 
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        var commandExecutor = getNewExecutorInstance(sender, args);
-
-        if (args.length > this.parameterPosition.size()) {
+        if (args.length > this.parameterManager.getSize()) {
             return new ArrayList<>();
         }
 
-        var parameterName = this.parameterPosition.get(args.length);
+        var commandExecutor = getNewExecutorInstance(sender, args);
+        var parameterName = this.parameterManager.getParameterNameAtPosition(args.length);
         return commandExecutor.getTabSuggestion(parameterName != null ? parameterName : "");
     }
 
@@ -90,20 +95,6 @@ public class CommandBase {
 
     private boolean checkPermission(CommandSender issuer) {
         return this.permission == null || issuer.hasPermission(this.permission);
-    }
-
-    private Map<Integer, String> getCommandParameterPositions() {
-        var argumentsPositions = new HashMap<Integer, String>();
-        var args = this.usage
-                .replace("[", "")
-                .replace("]", "")
-                .split(" ");
-
-        for (int i = 0; i < args.length; ++i) {
-            argumentsPositions.put(i, args[i]);
-        }
-
-        return argumentsPositions;
     }
 
     private Constructor<? extends CommandExecutor> getExecutorConstructor() {

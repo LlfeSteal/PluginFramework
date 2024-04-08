@@ -20,6 +20,10 @@ public class FrameworkLangService extends ConfigServiceBase implements fr.lifest
     @ConfigParam(paramKey="messages.error.command.no-permission")
     private String commandNoPermissionErrorMessage = "&cVous n'avez pas la permission d'éxécuter cette commande.";
 
+    @Colorized
+    @ConfigParam(paramKey = "messages.info.command.usage")
+    private String commandUsageMessage = "&aUsage: &e%command_usage%";
+
     public FrameworkLangService(Logger logger, ConfigRepository configRepository) {
         super(logger, configRepository);
     }
@@ -37,5 +41,10 @@ public class FrameworkLangService extends ConfigServiceBase implements fr.lifest
     @Override
     public String getCommandNoPermissionErrorMessage() {
         return commandNoPermissionErrorMessage;
+    }
+
+    @Override
+    public String getCommandUsageMessage(String usage) {
+        return commandUsageMessage.replace("%command_usage%", usage);
     }
 }
