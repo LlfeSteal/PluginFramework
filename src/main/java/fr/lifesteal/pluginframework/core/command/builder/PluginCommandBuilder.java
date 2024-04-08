@@ -39,7 +39,7 @@ public class PluginCommandBuilder {
         return this;
     }
 
-    public PluginCommandBuilder setSubCommands(CommandBase subCommand) {
+    public PluginCommandBuilder addSubCommands(CommandBase subCommand) {
         this.subCommands.add(subCommand);
         return this;
     }
