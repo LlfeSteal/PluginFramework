@@ -1,9 +1,11 @@
 package fr.lifesteal.pluginframework.core.command;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PluginCommand extends Command {
 
@@ -18,15 +20,33 @@ public class PluginCommand extends Command {
 
     @Override
     public boolean execute(CommandSender commandSender, String command, String[] args) {
-        if (defaultCommand != null && subCommands.isEmpty()) {
-            return this.defaultCommand.execute(commandSender, args);
-        }
-
-        var subCommand = GetSubCommand(args);
-        return subCommand != null && subCommand.execute(commandSender, args);
+        var commandToExecute = GetCommand(args);
+        return commandToExecute != null && commandToExecute.execute(commandSender, args);
     }
 
-    private CommandBase GetSubCommand(String[] args) {
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+        if (args.length <= 1 && !subCommands.isEmpty()) {
+            return this.subCommands.stream().map(CommandBase::getName).collect(Collectors.toList());
+        }
+
+        var command = GetCommand(args);
+
+        return command != null
+                ? command.tabComplete(sender, args)
+                : super.tabComplete(sender, alias, args);
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location location) throws IllegalArgumentException {
+        return this.tabComplete(sender, alias, args);
+    }
+
+    private CommandBase GetCommand(String[] args) {
+        if (defaultCommand != null && args.length == 0) {
+            return this.defaultCommand;
+        }
+
         if (args.length == 0) return null;
 
         for (var command : this.subCommands) {

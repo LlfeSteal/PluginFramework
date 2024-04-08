@@ -10,18 +10,14 @@ import java.util.List;
 public class CommandBuilder {
     private final FrameworkLangService langService;
     private final List<Object> extraArguments = new ArrayList<>();
-    private String name;
+    private String name = "default";
     private String permission = null;
     private Class<? extends CommandExecutor> executorType;
     private boolean isDisabled = false;
+    private String usage = "";
 
     public CommandBuilder(FrameworkLangService langService) {
         this.langService = langService;
-    }
-
-    public CommandBuilder setDisabled(boolean disabled) {
-        isDisabled = disabled;
-        return this;
     }
 
     public CommandBuilder setName(String name) {
@@ -31,6 +27,16 @@ public class CommandBuilder {
 
     public CommandBuilder setPermission(String permission) {
         this.permission = permission;
+        return this;
+    }
+
+    public CommandBuilder setDisabled(boolean disabled) {
+        isDisabled = disabled;
+        return this;
+    }
+
+    public CommandBuilder setUsage(String usage) {
+        this.usage = usage;
         return this;
     }
 
@@ -45,6 +51,6 @@ public class CommandBuilder {
     }
 
     public CommandBase build() {
-        return new CommandBase(this.langService, this.name, this.permission, this.isDisabled, this.executorType, this.extraArguments.toArray());
+        return new CommandBase(this.langService, this.name, this.permission, this.isDisabled, this.usage, this.executorType, this.extraArguments.toArray());
     }
 }
