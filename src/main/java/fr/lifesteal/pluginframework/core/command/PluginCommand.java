@@ -43,11 +43,9 @@ public class PluginCommand extends Command {
     }
 
     private CommandBase GetCommand(String[] args) {
-        if (defaultCommand != null && args.length == 0) {
+        if (args.length == 0) {
             return this.defaultCommand;
         }
-
-        if (args.length == 0) return null;
 
         for (var command : this.subCommands) {
             if (command.getName().equalsIgnoreCase(args[0])) {
@@ -55,6 +53,6 @@ public class PluginCommand extends Command {
             }
         }
 
-        return null;
+        return this.defaultCommand;
     }
 }

@@ -4,5 +4,5 @@ public interface FrameworkLangService extends ConfigService {
     String getDefaultErrorMessage();
     String getCommandDisabledErrorMessage();
     String getCommandNoPermissionErrorMessage();
-
+    String getCommandUsageMessage(String usage);
 }
