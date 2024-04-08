@@ -28,6 +28,17 @@ final class CommandParameterManager {
         return parameters.length >= this.minimumArgs;
     }
 
+    public Map<String, String> getParameterValues(String[] args) {
+        var parameterValues = new HashMap<String, String>();
+
+        for (int i = this.argsToSkip; i < args.length; ++i) {
+            var parameterName = this.getParameterNameAtPosition(i);
+            parameterValues.put(parameterName, args[i]);
+        }
+
+        return parameterValues;
+    }
+
     public int getSize() {
         return size;
     }
@@ -56,7 +67,7 @@ final class CommandParameterManager {
                 ++this.minimumArgs;
             }
 
-            commandParameters.put(i, parameter);
+            commandParameters.put(i - 1, parameter);
         }
     }
 
@@ -73,7 +84,6 @@ final class CommandParameterManager {
     private String parseParameterName(String parameter) {
         return parameter.replaceAll("[\\[\\]<>]", "");
     }
-
 
     private static final class CommandParameter {
         private final String name;

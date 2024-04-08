@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CommandBase {
@@ -66,7 +67,7 @@ public class CommandBase {
         }
 
         var commandExecutor = getNewExecutorInstance(sender, args);
-        var parameterName = this.parameterManager.getParameterNameAtPosition(args.length);
+        var parameterName = this.parameterManager.getParameterNameAtPosition(args.length - 1);
         return commandExecutor.getTabSuggestion(parameterName != null ? parameterName : "");
     }
 
@@ -81,7 +82,7 @@ public class CommandBase {
     private CommandExecutor getNewExecutorInstance(CommandSender issuer, String[] args) {
         var parameters = new ArrayList<>() {{
             add(issuer);
-            add(args);
+            add(parameterManager.getParameterValues(args));
             addAll(extraArguments);
         }};
 
@@ -100,7 +101,7 @@ public class CommandBase {
     private Constructor<? extends CommandExecutor> getExecutorConstructor() {
         var parametersTypes = new ArrayList<Class<?>>() {{
             add(CommandSender.class);
-            add(String[].class);
+            add(Map.class);
             addAll(extraArguments.stream().map(Object::getClass).collect(Collectors.toList()));
         }};
 
