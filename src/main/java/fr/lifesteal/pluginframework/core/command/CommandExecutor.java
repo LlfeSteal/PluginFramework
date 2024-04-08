@@ -4,14 +4,17 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class CommandExecutor {
     private final CommandSender issuer;
+    private final Map<String, String> parameters;
     private final String[] args;
 
-    public CommandExecutor(CommandSender issuer, String[] args) {
+    public CommandExecutor(CommandSender issuer, Map<String, String> parameters) {
         this.issuer = issuer;
-        this.args = args;
+        this.parameters = parameters;
+        this.args = parameters.values().toArray(String[]::new);
     }
 
     protected CommandSender getIssuer() {
@@ -19,7 +22,17 @@ public abstract class CommandExecutor {
     }
 
     protected String[] getArgs() {
-        return args;
+        return this.args;
+    }
+
+    protected String getArg(String name) {
+        return parameters.get(name);
+    }
+
+    protected String getArg(int position) {
+        return this.args.length - 1 >= position
+                ? this.args[position]
+                : null;
     }
 
     public List<String> getTabSuggestion(String paramName) {
@@ -31,5 +44,4 @@ public abstract class CommandExecutor {
     public abstract boolean prepare();
 
     public abstract boolean execute();
-
 }
