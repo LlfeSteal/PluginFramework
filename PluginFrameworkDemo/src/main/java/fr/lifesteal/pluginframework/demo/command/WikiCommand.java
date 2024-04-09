@@ -1,15 +1,17 @@
 package fr.lifesteal.pluginframework.demo.command;
 
 import fr.lifesteal.pluginframework.core.command.CommandExecutor;
-import fr.lifesteal.pluginframework.demo.business.DemoLangService;
+import fr.lifesteal.pluginframework.demo.business.contract.DemoLanguageService;
 import org.bukkit.command.CommandSender;
+
+import java.util.Map;
 
 public class WikiCommand extends CommandExecutor {
 
-    private final DemoLangService demoLangService;
+    private final DemoLanguageService demoLangService;
 
-    public WikiCommand(CommandSender issuer, String[] args,DemoLangService demoLangService) {
-        super(issuer, args);
+    public WikiCommand(CommandSender issuer, Map<String, String> namedArgs, DemoLanguageService demoLangService) {
+        super(issuer, namedArgs);
         this.demoLangService = demoLangService;
     }
 

@@ -1,14 +1,17 @@
 package fr.lifesteal.pluginframework.demo;
 
 import fr.lifesteal.pluginframework.api.config.ConfigService;
-import fr.lifesteal.pluginframework.core.command.PluginCommand;
 import fr.lifesteal.pluginframework.core.plugin.PluginBase;
 import fr.lifesteal.pluginframework.demo.business.DemoConfigService;
 import fr.lifesteal.pluginframework.demo.business.DemoLangService;
+import fr.lifesteal.pluginframework.demo.business.contract.DemoConfigurationService;
+import fr.lifesteal.pluginframework.demo.business.contract.DemoLanguageService;
 import fr.lifesteal.pluginframework.demo.business.object.DemoData;
 import fr.lifesteal.pluginframework.demo.command.DisplayDataCommand;
+import fr.lifesteal.pluginframework.demo.command.DisplayDataItemCommand;
 import fr.lifesteal.pluginframework.demo.command.PingCommand;
 import fr.lifesteal.pluginframework.demo.command.WikiCommand;
+import org.bukkit.command.Command;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
 
@@ -21,20 +24,20 @@ public class TestPluginFramework extends PluginBase {
         ConfigurationSerialization.registerClass(DemoData.class, "DemoData");
     }
 
-    private DemoLangService demoLangService;
-    private DemoConfigService demoConfigService;
+    private DemoLanguageService demoLangService;
+    private DemoConfigurationService demoConfigService;
 
     @Override
     public void init() {
-        var langConfigRepository = getConfigRepositoryFactory().getNewYamlConfigFactory("demo", "lang.yml");
+        var langConfigRepository = getConfigRepositoryFactory().getNewYamlRepository("demo", "lang.yml");
         demoLangService = new DemoLangService(getLogger(), langConfigRepository);
 
-        var configRepository = getConfigRepositoryFactory().getNewYamlConfigFactory("demo", "config.yml");
+        var configRepository = getConfigRepositoryFactory().getNewYamlRepository("demo", "config.yml");
         demoConfigService = new DemoConfigService(getLogger(), configRepository);
     }
 
     @Override
-    protected List<PluginCommand> registerCommands() {
+    protected List<Command> registerCommands() {
         return new ArrayList<>() {{
             add(getPluginCommandFactory()
                     .setName("ping")
@@ -62,8 +65,17 @@ public class TestPluginFramework extends PluginBase {
                     .addAlias("data")
                     .setDefaultCommand(getCommandBaseBuilder()
                             .setPermission("demo.displayData")
+                            .setUsage("displayData <command>")
                             .setExecutorType(DisplayDataCommand.class)
                             .addExtraArgument(demoConfigService)
+                            .build())
+                    .addSubCommands(getCommandBaseBuilder()
+                            .setName("get")
+                            .setUsage("displayData get [item]")
+                            .setPermission("demo.displayData.item")
+                            .setExecutorType(DisplayDataItemCommand.class)
+                            .addExtraArgument(demoConfigService)
+                            .addExtraArgument(demoLangService)
                             .build())
                     .build());
         }};
