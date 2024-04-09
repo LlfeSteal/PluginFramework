@@ -6,9 +6,11 @@ import fr.lifesteal.pluginframework.core.command.CommandExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class CommandBuilder {
     private final FrameworkLangService langService;
+    private final Logger logger;
     private final List<Object> extraArguments = new ArrayList<>();
     private String name = "default";
     private String permission = null;
@@ -16,8 +18,9 @@ public class CommandBuilder {
     private boolean isDisabled = false;
     private String usage = "";
 
-    public CommandBuilder(FrameworkLangService langService) {
+    public CommandBuilder(FrameworkLangService langService, Logger logger) {
         this.langService = langService;
+        this.logger = logger;
     }
 
     public CommandBuilder setName(String name) {
@@ -51,6 +54,14 @@ public class CommandBuilder {
     }
 
     public CommandBase build() {
-        return new CommandBase(this.langService, this.name, this.permission, this.isDisabled, this.usage, this.executorType, this.extraArguments.toArray());
+        return new CommandBase(
+                this.langService,
+                this.logger,
+                this.name,
+                this.permission,
+                this.isDisabled,
+                this.usage,
+                this.executorType,
+                this.extraArguments.toArray());
     }
 }

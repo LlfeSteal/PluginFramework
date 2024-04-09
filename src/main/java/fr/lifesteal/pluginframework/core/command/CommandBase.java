@@ -8,10 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CommandBase {
     private final FrameworkLangService langService;
+    private final Logger logger;
     private final String name;
     private final String usage;
     private final String permission;
@@ -23,6 +25,7 @@ public class CommandBase {
 
     public CommandBase(
             FrameworkLangService langService,
+            Logger logger,
             String name,
             String permission,
             boolean isDisabled,
@@ -30,6 +33,7 @@ public class CommandBase {
             Class<? extends CommandExecutor> executorType,
             Object... extraArguments) {
         this.langService = langService;
+        this.logger = logger;
         this.name = name;
         this.permission = permission;
         this.isDisabled = isDisabled;
@@ -108,10 +112,35 @@ public class CommandBase {
         try {
             return executorType.getConstructor(parametersTypes.toArray(Class<?>[]::new));
         } catch (NoSuchMethodException e) {
-            setDisabled(true);
-            // Todo : Ajouter log d'error.
-        }
+            var backupConstructor = getExecutionConstructorByImplementedInterfaces(parametersTypes);
+            if (backupConstructor == null) {
+                setDisabled(true);
+                this.logger.severe("No executor constructor found for " + this.name + ". Command has been disabled.");
+            }
 
+            return backupConstructor;
+        }
+    }
+
+    private Constructor<? extends CommandExecutor> getExecutionConstructorByImplementedInterfaces(List<Class<?>> parameterTypes) {
+        for (var constructor : executorType.getConstructors()) {
+            Class<?>[] constructorParameterTypes = constructor.getParameterTypes();
+            if (constructorParameterTypes.length != parameterTypes.size()) {
+                continue;
+            }
+
+            boolean match = true;
+            for (int i = 0; i < constructorParameterTypes.length; i++) {
+                if (!constructorParameterTypes[i].isAssignableFrom(parameterTypes.get(i))) {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match) {
+                return (Constructor<? extends CommandExecutor>) constructor;
+            }
+        }
         return null;
     }
 }
