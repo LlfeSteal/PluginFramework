@@ -1,11 +1,10 @@
 package fr.lifesteal.pluginframework.core.plugin;
 
 import fr.lifesteal.pluginframework.api.config.ConfigService;
-import fr.lifesteal.pluginframework.core.command.PluginCommand;
+import fr.lifesteal.pluginframework.core.business.FrameworkLangService;
 import fr.lifesteal.pluginframework.core.command.builder.CommandBuilder;
 import fr.lifesteal.pluginframework.core.command.builder.PluginCommandBuilder;
 import fr.lifesteal.pluginframework.core.config.factory.ConfigRepositoryFactory;
-import fr.lifesteal.pluginframework.core.business.FrameworkLangService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -20,7 +19,7 @@ public abstract class PluginBase extends JavaPlugin {
     private final String PluginFolder = getDataFolder().getPath();
     private ConfigRepositoryFactory  configRepositoryFactory;
     private fr.lifesteal.pluginframework.api.config.FrameworkLangService langService;
-    private List<PluginCommand> commands = new ArrayList<>();
+    private List<Command> commands = new ArrayList<>();
     private List<ConfigService> configurationsServices = new ArrayList<>();
     private List<Listener> listeners = new ArrayList<>();
 
@@ -48,7 +47,7 @@ public abstract class PluginBase extends JavaPlugin {
         return new PluginCommandBuilder();
     }
 
-    protected abstract List<PluginCommand> registerCommands();
+    protected abstract List<Command> registerCommands();
     protected abstract List<ConfigService> registerConfigurationsServices();
     protected abstract List<Listener> registerListeners();
 
