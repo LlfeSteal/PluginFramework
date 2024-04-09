@@ -40,7 +40,7 @@ public abstract class PluginBase extends JavaPlugin {
     }
 
     public CommandBuilder getCommandBaseBuilder() {
-        return new CommandBuilder(this.langService);
+        return new CommandBuilder(this.langService, getLogger());
     }
 
     public PluginCommandBuilder getPluginCommandFactory() {
