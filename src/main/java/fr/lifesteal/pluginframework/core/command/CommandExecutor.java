@@ -8,13 +8,13 @@ import java.util.Map;
 
 public abstract class CommandExecutor {
     private final CommandSender issuer;
-    private final Map<String, String> parameters;
+    private final Map<String, String> namedArgs;
     private final String[] args;
 
-    public CommandExecutor(CommandSender issuer, Map<String, String> parameters) {
+    public CommandExecutor(CommandSender issuer, Map<String, String> namedArgs) {
         this.issuer = issuer;
-        this.parameters = parameters;
-        this.args = parameters.values().toArray(String[]::new);
+        this.namedArgs = namedArgs;
+        this.args = namedArgs.values().toArray(String[]::new);
     }
 
     protected CommandSender getIssuer() {
@@ -26,7 +26,7 @@ public abstract class CommandExecutor {
     }
 
     protected String getArg(String name) {
-        return parameters.get(name);
+        return namedArgs.get(name);
     }
 
     protected String getArg(int position) {
