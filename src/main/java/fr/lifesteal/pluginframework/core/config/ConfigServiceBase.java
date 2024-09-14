@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public abstract class ConfigServiceBase implements ConfigService {
+public class ConfigServiceBase implements ConfigService {
 
     private final Logger logger;
     private final ConfigRepository configRepository;

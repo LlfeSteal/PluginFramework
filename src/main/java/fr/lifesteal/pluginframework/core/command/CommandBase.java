@@ -66,7 +66,7 @@ public class CommandBase {
     }
 
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        if (args.length > this.parameterManager.getSize()) {
+        if (args.length >= this.parameterManager.getSize()) {
             return new ArrayList<>();
         }
 
@@ -77,6 +77,10 @@ public class CommandBase {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isDisabled() {
+        return isDisabled;
     }
 
     public void setDisabled(boolean disabled) {
