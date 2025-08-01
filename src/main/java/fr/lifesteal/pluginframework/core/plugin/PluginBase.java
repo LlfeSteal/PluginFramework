@@ -110,7 +110,7 @@ public abstract class PluginBase extends JavaPlugin {
                 commandMap.register(command.getName(), command);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().severe("Unable to register bukkit commands." + e.getMessage());
         }
     }
 
