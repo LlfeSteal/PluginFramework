@@ -31,9 +31,12 @@ public abstract class PluginBase extends JavaPlugin {
         initConfigurationServices();
         registerBukkitCommand();
         registerBukkitListeners();
+        postInit();
     }
 
     public abstract void init();
+
+    public abstract void postInit();
 
     public ConfigRepositoryFactory getConfigRepositoryFactory() {
         return configRepositoryFactory;
