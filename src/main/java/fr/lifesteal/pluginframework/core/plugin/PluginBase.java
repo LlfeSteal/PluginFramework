@@ -38,14 +38,29 @@ public abstract class PluginBase extends JavaPlugin {
 
     public abstract void postInit();
 
+    /**
+     * This method is part of the public API and is intended to be used by
+     * consumers of the framework, even if not referenced internally.
+     */
+    @SuppressWarnings("unused")
     public ConfigRepositoryFactory getConfigRepositoryFactory() {
         return configRepositoryFactory;
     }
 
+    /**
+     * This method is part of the public API and is intended to be used by
+     * consumers of the framework, even if not referenced internally.
+     */
+    @SuppressWarnings("unused")
     public CommandBuilder getCommandBaseBuilder() {
         return new CommandBuilder(this.langService, getLogger());
     }
 
+    /**
+     * This method is part of the public API and is intended to be used by
+     * consumers of the framework, even if not referenced internally.
+     */
+    @SuppressWarnings("unused")
     public PluginCommandBuilder getPluginCommandFactory() {
         return new PluginCommandBuilder();
     }
