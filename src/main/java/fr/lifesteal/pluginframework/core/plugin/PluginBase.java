@@ -70,7 +70,11 @@ public abstract class PluginBase extends JavaPlugin {
     protected abstract List<Listener> registerListeners();
 
     private void initPluginFactories() {
-        getDataFolder().mkdir();
+        var dataFolder = getDataFolder();
+        if (!dataFolder.exists() && !dataFolder.mkdir()) {
+            getLogger().severe("Unable to create plugin folder: " + dataFolder.getAbsolutePath());
+        }
+
         configRepositoryFactory = new ConfigRepositoryFactory(getLogger(), PluginFolder);
     }
 
