@@ -19,20 +19,21 @@ public abstract class PluginBase extends JavaPlugin {
     private final String PluginFolder = getDataFolder().getPath();
     private ConfigRepositoryFactory  configRepositoryFactory;
     private fr.lifesteal.pluginframework.api.config.FrameworkLangService langService;
-    private List<Command> commands = new ArrayList<>();
     private List<ConfigService> configurationsServices = new ArrayList<>();
-    private List<Listener> listeners = new ArrayList<>();
+
 
     @Override
     public void onEnable() {
         initPluginFactories();
-        init();
-        initPluginFields();
+        initConfiguration();
         initConfigurationServices();
+        init();
         registerBukkitCommand();
         registerBukkitListeners();
         postInit();
     }
+
+    public abstract void initConfiguration();
 
     public abstract void init();
 
@@ -78,19 +79,14 @@ public abstract class PluginBase extends JavaPlugin {
         configRepositoryFactory = new ConfigRepositoryFactory(getLogger(), PluginFolder);
     }
 
-    private void initPluginFields() {
-        this.langService = new FrameworkLangService(getLogger(), configRepositoryFactory.getNewYamlRepository("framework", "framework-lang.yml"));
-
-        commands = this.registerCommands();
-        configurationsServices = this.registerConfigurationsServices();
-        configurationsServices.add(this.langService);
-        listeners = registerListeners();
-    }
-
     /**
      * Method used to init plugin's configuration services.
      */
     private void initConfigurationServices() {
+        this.langService = new FrameworkLangService(getLogger(), configRepositoryFactory.getNewYamlRepository("framework", "framework-lang.yml"));
+        this.configurationsServices.add(this.langService);
+
+        this.configurationsServices = this.registerConfigurationsServices();
         for (var configurationService : configurationsServices) {
             getLogger().info("Loading config file : " + configurationService.getClass().getName());
             configurationService.initConfig();
@@ -105,7 +101,7 @@ public abstract class PluginBase extends JavaPlugin {
             final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             bukkitCommandMap.setAccessible(true);
 
-            for (Command command : this.commands) {
+            for (Command command : this.registerCommands()) {
                 CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
                 commandMap.register(command.getName(), command);
             }
@@ -118,7 +114,7 @@ public abstract class PluginBase extends JavaPlugin {
      * Method used to register plugin's listeners.
      */
     private void registerBukkitListeners() {
-        for (var listener : this.listeners) {
+        for (var listener : registerListeners()) {
             Bukkit.getServer().getPluginManager().registerEvents(listener, this);
         }
     }
